@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT Support & Helpdesk Dashboard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 22px;
+    }
+
+    header h1 {
+      font-size: 25px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 25px 18px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      gap: 15px;
+    }
+
+    .top h2 {
+      font-size: 23px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      padding: 11px 17px;
+      font-weight: bold;
+    }
+
+    .add-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+    }
+
+    .card span {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .card h3 {
+      font-size: 28px;
+      margin-top: 8px;
+    }
+
+    .blue { border-left: 5px solid #2563eb; }
+    .orange { border-left: 5px solid #f59e0b; }
+    .green { border-left: 5px solid #16a34a; }
+    .red { border-left: 5px solid #dc2626; }
+
+    .toolbar {
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .toolbar input {
+      flex: 1;
+    }
+
+    .toolbar select {
+      max-width: 180px;
+    }
+
+    .tickets {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+    }
+
+    .tickets-header {
+      padding: 18px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .ticket {
+      padding: 18px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .ticket:last-child {
+      border-bottom: none;
+    }
+
+    .ticket-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .ticket h4 {
+      margin-bottom: 7px;
+      font-size: 16px;
+    }
+
+    .ticket p {
+      color: #64748b;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .high {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .open {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .progress {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .resolved {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-select {
+      max-width: 150px;
+      padding: 7px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 14px;
+      padding: 25px;
+    }
+
+    .modal-box h2 {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .save-btn {
+      background: #16a34a;
+      color: white;
+      flex: 1;
+    }
+
+    .cancel-btn {
+      background: #e5e7eb;
+      flex: 1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    @media (max-width: 750px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .toolbar {
+        flex-direction: column;
+      }
+
+      .toolbar select {
+        max-width: none;
+      }
+
+      .ticket-top {
+        flex-direction: column;
+      }
+
+      .status-select {
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🖥️ IT Support & Helpdesk</h1>
+    <p>Support ticket management dashboard</p>
+  </header>
+
+  <main class="container">
+
+    <div class="top">
+      <h2>Dashboard Overview</h2>
+      <button class="add-btn" onclick="openModal()">+ New Ticket</button>
+    </div>
+
+    <section class="stats">
+
+      <div class="card blue">
+        <span>Total Tickets</span>
+        <h3 id="total">0</h3>
+      </div>
+
+      <div class="card orange">
+        <span>Open Tickets</span>
+        <h3 id="open">0</h3>
+      </div>
+
+      <div class="card red">
+        <span>In Progress</span>
+        <h3 id="progress">0</h3>
+      </div>
+
+      <div class="card green">
+        <span>Resolved</span>
+        <h3 id="resolved">0</h3>
+      </div>
+
+    </section>
+
+    <section class="toolbar">
+
+      <input
+        type="text"
+        id="search"
+        placeholder="🔍 Search tickets..."
+        oninput="renderTickets()"
+      >
+
+      <select id="filter" onchange="renderTickets()">
+        <option value="all">All Status</option>
+        <option value="Open">Open</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+      </select>
+
+    </section>
+
+    <section class="tickets">
+
+      <div class="tickets-header">
+        Support Tickets
+      </div>
+
+      <div id="ticketList"></div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    IT Support & Helpdesk Dashboard • Built with HTML, CSS & JavaScript
+  </footer>
+
+
+  <div class="modal" id="modal">
+
+    <div class="modal-box">
+
+      <h2>Create Support Ticket</h2>
+
+      <div class="form-group">
+        <label>Issue Title</label>
+        <input id="title" placeholder="e.g. Internet connection issue">
+      </div>
+
+      <div class="form-group">
+        <label>Employee / User</label>
+        <input id="user" placeholder="e.g. Rahul Sharma">
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="description" rows="4"
+          placeholder="Describe the technical problem"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Priority</label>
+        <select id="priority">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+        </select>
+      </div>
+
+      <div class="form-buttons">
+
+        <button class="cancel-btn" onclick="closeModal()">
+          Cancel
+        </button>
+
+        <button class="save-btn" onclick="addTicket()">
+          Create Ticket
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    let tickets = [
+      {
+        id: 1001,
+        title: "Internet Connection Issue",
+        user: "Rahul Sharma",
+        description: "Unable to connect to office Wi-Fi.",
+        priority: "High",
+        status: "Open"
+      },
+      {
+        id: 1002,
+        title: "Printer Not Working",
+        user: "Priya Singh",
+        description: "Printer is not responding to print commands.",
+        priority: "Medium",
+        status: "In Progress"
+      },
+      {
+        id: 1003,
+        title: "Password Reset Request",
+        user: "Amit Kumar",
+        description: "User needs help resetting account password.",
+        priority: "Low",
+        status: "Resolved"
+      }
+    ];
+
+    function updateStats() {
+
+      document.getElementById("total").textContent = tickets.length;
+
+      document.getElementById("open").textContent =
+        tickets.filter(t => t.status === "Open").length;
+
+      document.getElementById("progress").textContent =
+        tickets.filter(t => t.status === "In Progress").length;
+
+      document.getElementById("resolved").textContent =
+        tickets.filter(t => t.status === "Resolved").length;
+    }
+
+
+    function renderTickets() {
+
+      const list = document.getElementById("ticketList");
+
+      const search = document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+      const filter = document.getElementById("filter").value;
+
+      list.innerHTML = "";
+
+      const filtered = tickets.filter(ticket => {
+
+        const matchesSearch =
+          ticket.title.toLowerCase().includes(search) ||
+          ticket.user.toLowerCase().includes(search) ||
+          ticket.description.toLowerCase().includes(search);
+
+        const matchesFilter =
+          filter === "all" || ticket.status === filter;
+
+        return matchesSearch && matchesFilter;
+      });
+
+
+      if (filtered.length === 0) {
+
+        list.innerHTML =
+          '<div class="ticket"><p>No tickets found.</p></div>';
+
+        updateStats();
+        return;
+      }
+
+
+      filtered.forEach(ticket => {
+
+        const priorityClass =
+          ticket.priority.toLowerCase();
+
+        let statusClass = "open";
+
+        if (ticket.status === "In Progress") {
+          statusClass = "progress";
+        }
+
+        if (ticket.status === "Resolved") {
+          statusClass = "resolved";
+        }
+
+
+        const div = document.createElement("div");
+
+        div.className = "ticket";
+
+        div.innerHTML = `
+
+          <div class="ticket-top">
+
+            <div>
+
+              <h4>#${ticket.id} — ${ticket.title}</h4>
+
+              <p>
+                👤 ${ticket.user}<br>
+                ${ticket.description}
+              </p>
+
+              <div class="badges">
+
+                <span class="badge ${priorityClass}">
+                  ${ticket.priority} Priority
+                </span>
+
+                <span class="badge ${statusClass}">
+                  ${ticket.status}
+                </span>
+
+              </div>
+
+            </div>
+
+            <select
+              class="status-select"
+              onchange="changeStatus(${ticket.id}, this.value)"
+            >
+
+              <option ${ticket.status === "Open" ? "selected" : ""}>
+                Open
+              </option>
+
+              <option ${ticket.status === "In Progress" ? "selected" : ""}>
+                In Progress
+              </option>
+
+              <option ${ticket.status === "Resolved" ? "selected" : ""}>
+                Resolved
+              </option>
+
+            </select>
+
+          </div>
+        `;
+
+        list.appendChild(div);
+
+      });
+
+      updateStats();
+    }
+
+
+    function changeStatus(id, status) {
+
+      const ticket = tickets.find(t => t.id === id);
+
+      if (ticket) {
+        ticket.status = status;
+      }
+
+      renderTickets();
+    }
+
+
+    function openModal() {
+      document.getElementById("modal").style.display = "flex";
+    }
+
+
+    function closeModal() {
+
+      document.getElementById("modal").style.display = "none";
+
+      document.getElementById("title").value = "";
+      document.getElementById("user").value = "";
+      document.getElementById("description").value = "";
+      document.getElementById("priority").value = "Medium";
+    }
+
+
+    function addTicket() {
+
+      const title =
+        document.getElementById("title").value.trim();
+
+      const user =
+        document.getElementById("user").value.trim();
+
+      const description =
+        document.getElementById("description").value.trim();
+
+      const priority =
+        document.getElementById("priority").value;
+
+
+      if (!title || !user || !description) {
+
+        alert("Please fill all fields.");
+
+        return;
+      }
+
+
+      const newTicket = {
+
+        id: Date.now(),
+
+        title: title,
+
+        user: user,
+
+        description: description,
+
+        priority: priority,
+
+        status: "Open"
+      };
+
+
+      tickets.unshift(newTicket);
+
+      closeModal();
+
+      renderTickets();
+    }
+
+
+    renderTickets();
+
+  </script>
+
+</body>
+</html>
